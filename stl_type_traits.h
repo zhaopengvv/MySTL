@@ -6,7 +6,7 @@
  * type_traits负责萃取型别特性，此处的型别是指：这个型别是否具备non-trivial default ctor？是否具备non-trivial copy cotr？
  * 是否具备non-trivial assignment operator？是否具备non-trivial dtor？
  * 如果是否定的，对这个型别进行构造、析构、拷贝和赋值等操作时，可以采用最直接的措施(例如根本不用调用那些constructor，destructor),
- * 而采用最直接处理操作，如malloc()、memcpy()等等，获得最高效率。
+ * 而采用最直接处理操作，如malloc()、memcpy()等等，获得最高效率。实际使用场景见mystl::__destroy
  * 
  */
 

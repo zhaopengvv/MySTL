@@ -12,7 +12,7 @@ inline void construct(T1* p, const T2& value)
     new (p) T1(value); // placement new; 调用T1:T1(value)，在指定空间生构造对象
 }
 
-// destroy 第二版本，接受一个指针
+// destroy 第一版本，接受一个指针
 template <class T>
 inline void destroy(T* pointer)
 {
