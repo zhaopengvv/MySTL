@@ -2,10 +2,17 @@
 #define MYSTL_ALLOC_H_
 
 #include <stddef.h>
+
 namespace mystl {
 
-// # ifdef __USE_MALLOC
-// typedef __malloc_alloc_template<0> malloc_alloc;
+# ifdef __USE_MALLOC
+typedef __malloc_alloc_template<0> malloc_alloc;
+typedef malloc_alloc alloc;
+# else 
+// 令alloc为第二级配置器
+typedef __default_alloc_template<__NODE_ALLOCATOR_THREADS, 0> alloc;
+
+#endif
 
 // allocate 统一接口
 template<class T, class Alloc>
