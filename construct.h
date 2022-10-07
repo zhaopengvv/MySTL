@@ -1,7 +1,7 @@
 #ifndef MYSTL_STLCONSTRUCT_H_
 #define MYSTL_STLCONSTRUCT_H_
 #include <new>
-#include "stl_type_traits.h"
+#include "type_traits.h"
 
 // 内存配置后的对象构造和内存释放前的对象析构
 namespace mystl {

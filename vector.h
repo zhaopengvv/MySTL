@@ -2,8 +2,8 @@
 #define STL_VECTOR_H_
 
 
-#include "stl_alloc.h"
-#include "stl_construct.h"
+#include "alloc.h"
+#include "construct.h"
 
 namespace mystl {
 
@@ -166,6 +166,8 @@ protected:
     iterator allocate_and_fill(size_type n, const T& x)
     {
         iterator result = data_allocator::allocate(n);
+        uninitialized_fill_n(result, n, x); // 全局函数
+        return result;
     }
 
 
