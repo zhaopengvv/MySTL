@@ -10,56 +10,60 @@ namespace mystl {
  * ::new (void *p) T(value)
 */
 
-template <class T>
-void construct(T *ptr)
+// construct 构造对象
+
+template <class Ty>
+void construct(Ty* ptr)
 {
-    ::new ((void *)ptr) T();
+  ::new ((void*)ptr) Ty();
 }
 
-template <class T1, class T2>
-void construct(T1* ptr, const T2& value)
+template <class Ty1, class Ty2>
+void construct(Ty1* ptr, const Ty2& value)
 {
-    ::new ((void *)ptr) T1(value);
+  ::new ((void*)ptr) Ty1(value);
 }
 
-template <class T>
-void destroy_one(T*, std::true_type) {}
-
-template <class T>
-void destroy_one(T *pointer, std::false_type)
+template <class Ty, class... Args>
+void construct(Ty* ptr, Args&&... args)
 {
-    if (pointer != nullptr) {
-        pointer->~T();
-    }
+  ::new ((void*)ptr) Ty(mystl::forward<Args>(args)...);
 }
 
-/**
- * __type_traits：负责萃取型别（type）的特性。
- * 判断型别是否具备 non-trivial default ctor, non-trivial copy ctor, non-trivial assignment oreator, 
- * non-trivial dtor？如果不具备，在对型别进行析构、构造、拷贝和赋值等操作时，就可以采用最有效的措施，采用内存
- * 最直接的操作，如malloc和memcpy等，获得最高效率。 
-*/
+// destroy 将对象析构
+template <class Ty>
+void destroy_one(Ty*, std::true_type) {}
 
-template <class T>
-void destroy(T *pointer)
+template <class Ty>
+void destroy_one(Ty* pointer, std::false_type)
 {
-    destroy_one(pointer, std::is_trivially_destructible<T>{});
+  if (pointer != nullptr)
+  {
+    pointer->~Ty();
+  }
+}
+
+template <class ForwardIter>
+void destroy_cat(ForwardIter , ForwardIter , std::true_type) {}
+
+template <class ForwardIter>
+void destroy_cat(ForwardIter first, ForwardIter last, std::false_type)
+{
+  for (; first != last; ++first)
+    destroy(&*first);
+}
+
+template <class Ty>
+void destroy(Ty* pointer)
+{
+  destroy_one(pointer, std::is_trivially_destructible<Ty>{});
 }
 
 template <class ForwardIter>
 void destroy(ForwardIter first, ForwardIter last)
 {
-    destroy_cat(first, last, std::is_trivially_destructible<typename iterator_traits<ForwardIter>::value_type>{});
-}
-
-template <class ForwardIter>
-void destroy_cat(ForwardIter, ForwardIter, std::true_type) {}
-
-template <class ForwardIter>
-void destroy_cat(ForwardIter first, ForwardIter last, std::false_type)
-{
-    for (; first != last; ++first)
-        destroy(&*first);
+  destroy_cat(first, last, std::is_trivially_destructible<
+              typename iterator_traits<ForwardIter>::value_type>{});
 }
 
 
